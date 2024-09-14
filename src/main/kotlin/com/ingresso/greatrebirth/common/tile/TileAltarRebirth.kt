@@ -1,6 +1,7 @@
 package com.ingresso.greatrebirth.common.tile
 
 import com.ingresso.greatrebirth.Main
+import com.ingresso.greatrebirth.common.container.ContainerAltarRebirth
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -96,9 +97,7 @@ class TileAltarRebirth(
         id: Int,
         inv: Inventory,
         player: Player
-    ): AbstractContainerMenu {
-        TODO("Not yet implemented")
-    }
+    ): AbstractContainerMenu = ContainerAltarRebirth(id, this, inv)
 
     override fun getDisplayName(): Component = Component.literal("Rebirth Altar")
 }

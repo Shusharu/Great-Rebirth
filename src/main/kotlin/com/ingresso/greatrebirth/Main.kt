@@ -1,7 +1,10 @@
 package com.ingresso.greatrebirth
 
+import com.ingresso.greatrebirth.client.screens.ScreenAltarRebirth
 import com.ingresso.greatrebirth.common.block.BlockAltarRebirth
+import com.ingresso.greatrebirth.common.container.ContainerAltarRebirth
 import com.ingresso.greatrebirth.common.tile.TileAltarRebirth
+import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.item.BlockItem
@@ -13,13 +16,12 @@ import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.common.extensions.IForgeMenuType
 import net.minecraftforge.event.server.ServerStartingEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.ModLoadingContext
 import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import net.minecraftforge.fml.config.ModConfig
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
@@ -34,7 +36,9 @@ class Main {
         BLOCKS.register(modEventBus)
         ITEMS.register(modEventBus)
         TILE_ENTITIES.register(modEventBus)
+        MENU_TYPES.register(modEventBus)
         CREATIVE_MODE_TABS.register(modEventBus)
+        modEventBus.addListener(::onClientSetup)
         MinecraftForge.EVENT_BUS.register(this)
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC)
     }
@@ -42,20 +46,21 @@ class Main {
     @SubscribeEvent
     fun commonSetup(event: FMLCommonSetupEvent) {}
 
+    fun onClientSetup(event: FMLClientSetupEvent) {
+        event.enqueueWork {
+            MenuScreens.register(CONTAINER_ALTAR_REBIRTH.get(), ::ScreenAltarRebirth)
+        }
+    }
+
     @SubscribeEvent
     fun onServerStarting(event: ServerStartingEvent?) {}
-
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = [Dist.CLIENT])
-    object ClientModEvents {
-        @SubscribeEvent
-        fun onClientSetup(event: FMLClientSetupEvent?) {}
-    }
 
     companion object {
         const val MODID = "greatrebirth"
         val BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID)
         val ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID)
-        val TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
+        val TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID)
+        val MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID)
         val CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID)
 //        val EXAMPLE_BLOCK =
 //            BLOCKS.register("example_block") { Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)) }
@@ -83,6 +88,9 @@ class Main {
                 { pos: BlockPos, state: BlockState -> TileAltarRebirth(pos, state) },
                 BLOCK_ALTAR_REBIRTH.get()
             ).build(null)
+        }
+        val CONTAINER_ALTAR_REBIRTH = MENU_TYPES.register("container_altar_rebirth") {
+            IForgeMenuType.create(::ContainerAltarRebirth)
         }
         val EXAMPLE_TAB = CREATIVE_MODE_TABS.register("great_rebirth") {
             CreativeModeTab.builder()
