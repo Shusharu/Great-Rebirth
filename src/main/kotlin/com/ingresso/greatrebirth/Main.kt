@@ -2,6 +2,7 @@ package com.ingresso.greatrebirth
 
 import com.ingresso.greatrebirth.common.block.BlockAltarRebirth
 import com.ingresso.greatrebirth.common.tile.TileAltarRebirth
+import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
@@ -11,6 +12,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.server.ServerStartingEvent
@@ -24,9 +26,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 import net.minecraftforge.registries.DeferredRegister
 import net.minecraftforge.registries.ForgeRegistries
-import net.minecraftforge.registries.RegistryObject
-import wayoftime.bloodmagic.BloodMagic
-import wayoftime.bloodmagic.common.tile.TileAltar
 
 @Mod(Main.MODID)
 class Main {
@@ -34,6 +33,7 @@ class Main {
         val modEventBus = FMLJavaModLoadingContext.get().modEventBus
         BLOCKS.register(modEventBus)
         ITEMS.register(modEventBus)
+        TILE_ENTITIES.register(modEventBus)
         CREATIVE_MODE_TABS.register(modEventBus)
         MinecraftForge.EVENT_BUS.register(this)
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC)
@@ -79,7 +79,10 @@ class Main {
             BlockItem(BLOCK_ALTAR_REBIRTH.get(), Item.Properties())
         }
         val TILE_ALTAR_REBIRTH = TILE_ENTITIES.register("tile_altar_rebirth") {
-            BlockEntityType.Builder.of(::TileAltarRebirth, BLOCK_ALTAR_REBIRTH.get()).build(null)
+            BlockEntityType.Builder.of(
+                { pos: BlockPos, state: BlockState -> TileAltarRebirth(pos, state) },
+                BLOCK_ALTAR_REBIRTH.get()
+            ).build(null)
         }
         val EXAMPLE_TAB = CREATIVE_MODE_TABS.register("great_rebirth") {
             CreativeModeTab.builder()

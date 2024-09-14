@@ -30,6 +30,6 @@ class BlockAltarRebirth(prop: Properties) : Block(prop), EntityBlock {
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity {
-        return TileAltarRebirth(null, pos, state)
+        return TileAltarRebirth(pos, state)
     }
 }

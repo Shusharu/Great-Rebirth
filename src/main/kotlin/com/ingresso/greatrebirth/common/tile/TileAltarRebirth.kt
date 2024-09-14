@@ -2,22 +2,45 @@ package com.ingresso.greatrebirth.common.tile
 
 import com.ingresso.greatrebirth.Main
 import net.minecraft.core.BlockPos
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.Component
+import net.minecraft.world.MenuProvider
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.fluids.FluidType
 import wayoftime.bloodmagic.altar.IBloodAltar
 import wayoftime.bloodmagic.common.tile.TileInventory
 
 class TileAltarRebirth(
+    type: BlockEntityType<*>,
     pos: BlockPos,
     state: BlockState
-) : TileInventory(Main.TILE_ALTAR_REBIRTH.get(), 1, "rebirthaltar", pos, state), IBloodAltar {
-    override fun getCapacity(): Int = FluidType.BUCKET_VOLUME * 100
+) : TileInventory(type, 1, "rebirthaltar", pos, state),
+    MenuProvider, IBloodAltar
+{
+    private var bloodAmount = 0
 
-    override fun getCurrentBlood(): Int {
-        TODO("Not yet implemented")
+    constructor(pos: BlockPos, state: BlockState) : this(Main.TILE_ALTAR_REBIRTH.get(), pos, state)
+
+    override fun serialize(tag: CompoundTag): CompoundTag {
+        super.serialize(tag)
+        tag.putInt("bloodAmount", bloodAmount)
+        return tag
     }
 
-    override fun getTier(): Int = 1
+    override fun deserialize(tag: CompoundTag) {
+        super.deserialize(tag)
+        bloodAmount = tag.getInt("bloodAmount")
+    }
+
+    override fun getCapacity(): Int = FluidType.BUCKET_VOLUME * 100
+
+    override fun getCurrentBlood(): Int = bloodAmount
+
+    override fun getTier(): Int = 5
 
     override fun getProgress(): Int = 0
 
@@ -44,7 +67,9 @@ class TileAltarRebirth(
     override fun getBufferCapacity(): Int = 0
 
     override fun sacrificialDaggerCall(amount: Int, isSacrifice: Boolean) {
-
+        if (bloodAmount < capacity) {
+            bloodAmount += amount
+        }
     }
 
     override fun startCycle() {
@@ -67,4 +92,13 @@ class TileAltarRebirth(
 
     }
 
+    override fun createMenu(
+        id: Int,
+        inv: Inventory,
+        player: Player
+    ): AbstractContainerMenu {
+        TODO("Not yet implemented")
+    }
+
+    override fun getDisplayName(): Component = Component.literal("Rebirth Altar")
 }

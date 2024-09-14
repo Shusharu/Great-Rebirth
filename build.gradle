@@ -89,6 +89,7 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
     implementation fg.deobf("com:bloodmagic:${minecraft_version}-3.3.3-45")
     implementation fg.deobf("com:Patchouli:${minecraft_version}-84-FORGE")
+    runtimeOnly ":kotlinforforge:4.10.0-all"
 }
 
 tasks.named('processResources', ProcessResources).configure {
