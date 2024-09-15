@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
+import wayoftime.bloodmagic.common.item.routing.IRoutingFilterProvider
 
 class ContainerAltarRebirth(
     id: Int,
@@ -33,7 +34,7 @@ class ContainerAltarRebirth(
     )
 
     private fun init(player: Container, tile: Container) {
-        addSlot(Slot(tile, 0, 62, 15))
+        addSlot(Slot(tile, 0, 80, 51))
 
         for (i in 0..2) {
             for (j in 0..8) {
@@ -45,8 +46,35 @@ class ContainerAltarRebirth(
         }
     }
 
-    override fun quickMoveStack(p_38941_: Player, p_38942_: Int): ItemStack {
-        TODO("Not yet implemented")
+    override fun quickMoveStack(pPlayer: Player, pIndex: Int): ItemStack {
+        var itemstack = ItemStack.EMPTY
+        val slot = slots[pIndex]
+        if (slot != null && slot.hasItem()) {
+            val itemstack1 = slot.item
+            itemstack = itemstack1.copy()
+            if (pIndex == 0) {
+                if (!moveItemStackTo(itemstack1, 1, 37, false)) {
+                    return ItemStack.EMPTY
+                }
+            } else if (pIndex > 0) {
+                if (!moveItemStackTo(itemstack1, 0, 1, false)) {
+                    return ItemStack.EMPTY
+                }
+            }
+
+            if (itemstack1.isEmpty) {
+                slot.set(ItemStack.EMPTY)
+            } else {
+                slot.setChanged()
+            }
+
+            if (itemstack1.count == itemstack.count) {
+                return ItemStack.EMPTY
+            }
+
+            slot.onTake(pPlayer, itemstack1)
+        }
+        return itemstack
     }
 
     override fun stillValid(player: Player): Boolean = tile.stillValid(player)
