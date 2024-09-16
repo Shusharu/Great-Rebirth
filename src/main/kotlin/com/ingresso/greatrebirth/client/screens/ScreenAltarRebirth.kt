@@ -40,5 +40,13 @@ class ScreenAltarRebirth(container: ContainerAltarRebirth, player: Inventory, ti
     ) {
         super.renderBackground(pGuiGraphics)
         pGuiGraphics.blit(background, leftPos, topPos, 0, 0, imageWidth, imageHeight)
+        val l = bloodProgress(90)
+        pGuiGraphics.blit(background, leftPos + 14, topPos + 16 + 90 - l, 176, 90 - l, 18, l)
+    }
+
+    private fun bloodProgress(scale: Int): Int {
+        val currentBlood = tile.currentBlood
+        val factor = currentBlood / tile.capacity.toDouble()
+        return (factor * scale).toInt()
     }
 }

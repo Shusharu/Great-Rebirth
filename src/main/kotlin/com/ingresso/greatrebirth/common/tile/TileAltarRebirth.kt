@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.fluids.FluidType
 import wayoftime.bloodmagic.altar.IBloodAltar
 import wayoftime.bloodmagic.common.tile.TileInventory
+import kotlin.math.min
 
 class TileAltarRebirth(
     type: BlockEntityType<*>,
@@ -68,9 +69,7 @@ class TileAltarRebirth(
     override fun getBufferCapacity(): Int = 0
 
     override fun sacrificialDaggerCall(amount: Int, isSacrifice: Boolean) {
-        if (bloodAmount < capacity) {
-            bloodAmount += amount
-        }
+        bloodAmount += min(capacity - bloodAmount, amount)
     }
 
     override fun startCycle() {
@@ -86,7 +85,10 @@ class TileAltarRebirth(
     override fun setActive() {}
 
     override fun fillMainTank(amount: Int): Int {
-        TODO("Not yet implemented")
+        val filledAmount = min(capacity - bloodAmount, amount)
+        bloodAmount += filledAmount
+
+        return filledAmount
     }
 
     override fun requestPauseAfterCrafting(cooldown: Int) {
