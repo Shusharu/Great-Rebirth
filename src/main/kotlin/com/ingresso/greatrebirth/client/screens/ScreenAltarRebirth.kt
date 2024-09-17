@@ -15,6 +15,7 @@ class ScreenAltarRebirth(container: ContainerAltarRebirth, player: Inventory, ti
 
     private val background = ResourceLocation(Main.MODID, "textures/gui/rebirthaltar.png")
     private val tile: TileAltarRebirth
+    private var isButtonDown = false
 
     init {
         imageWidth = 176
@@ -25,11 +26,19 @@ class ScreenAltarRebirth(container: ContainerAltarRebirth, player: Inventory, ti
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         super.render(guiGraphics, mouseX, mouseY, partialTick)
-        val rebirthButton = Button.builder(Component.translatable("button.rebirth"), {})
+        clearWidgets()
+        val rebirthButton = Button.builder(Component.translatable("button.rebirth")) {
+            isButtonDown = true
+        }
             .pos(leftPos + 86, topPos + 91)
             .size(80, 20)
             .build()
         addRenderableWidget(rebirthButton)
+        if (isButtonDown) {
+            addChooseButtons {
+                isButtonDown = false
+            }
+        }
     }
 
     override fun renderBg(
@@ -41,7 +50,30 @@ class ScreenAltarRebirth(container: ContainerAltarRebirth, player: Inventory, ti
         super.renderBackground(pGuiGraphics)
         pGuiGraphics.blit(background, leftPos, topPos, 0, 0, imageWidth, imageHeight)
         val l = bloodProgress(90)
-        pGuiGraphics.blit(background, leftPos + 14, topPos + 16 + 90 - l, 176, 90 - l, 18, l)
+        pGuiGraphics.blit(background, leftPos + 14, topPos + 16 + 90 - l, imageWidth, 90 - l, 18, l)
+
+        pGuiGraphics.blit(background, leftPos + 99, topPos + 10, 0, imageHeight, 71, 20)
+        pGuiGraphics.blit(background, leftPos + 99, topPos + 33, 0, imageHeight, 71, 20)
+        pGuiGraphics.blit(background, leftPos + 99, topPos + 56, 0, imageHeight, 71, 20)
+    }
+
+    private fun addChooseButtons(action: () -> Unit) {
+        val firstChoose = Button.builder(Component.translatable(""), { action.invoke() })
+            .pos(leftPos + 99, topPos + 10)
+            .size(71, 20)
+            .build()
+        val secondChoose = Button.builder(Component.translatable(""), { action.invoke() })
+            .pos(leftPos + 99, topPos + 33)
+            .size(71, 20)
+            .build()
+        val thirdChoose = Button.builder(Component.translatable(""), { action.invoke() })
+            .pos(leftPos + 99, topPos + 56)
+            .size(71, 20)
+            .build()
+
+        addRenderableWidget(firstChoose)
+        addRenderableWidget(secondChoose)
+        addRenderableWidget(thirdChoose)
     }
 
     private fun bloodProgress(scale: Int): Int {

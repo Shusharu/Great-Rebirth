@@ -34,7 +34,7 @@ class ContainerAltarRebirth(
     )
 
     private fun init(player: Container, tile: Container) {
-        addSlot(Slot(tile, 0, 80, 51))
+        addSlot(Slot(tile, 0, 60, 51))
 
         for (i in 0..2) {
             for (j in 0..8) {

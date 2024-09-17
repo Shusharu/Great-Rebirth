@@ -20,9 +20,7 @@ class TileAltarRebirth(
     type: BlockEntityType<*>,
     pos: BlockPos,
     state: BlockState
-) : TileInventory(type, 1, "rebirthaltar", pos, state),
-    MenuProvider, IBloodAltar
-{
+) : TileInventory(type, 1, "rebirthaltar", pos, state), MenuProvider, IBloodAltar {
     private var bloodAmount = 0
 
     constructor(pos: BlockPos, state: BlockState) : this(Main.TILE_ALTAR_REBIRTH.get(), pos, state)
@@ -101,5 +99,5 @@ class TileAltarRebirth(
         player: Player
     ): AbstractContainerMenu = ContainerAltarRebirth(id, this, inv)
 
-    override fun getDisplayName(): Component = Component.literal("Rebirth Altar")
+    override fun getDisplayName(): Component = Component.translatable("title.rebirthaltar")
 }
