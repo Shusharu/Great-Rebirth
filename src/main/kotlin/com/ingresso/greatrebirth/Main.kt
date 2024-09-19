@@ -4,6 +4,7 @@ import com.ingresso.greatrebirth.client.screens.ScreenAltarRebirth
 import com.ingresso.greatrebirth.common.block.BlockAltarRebirth
 import com.ingresso.greatrebirth.common.capability.BuffsProvider
 import com.ingresso.greatrebirth.common.container.ContainerAltarRebirth
+import com.ingresso.greatrebirth.common.network.NetworkHandler
 import com.ingresso.greatrebirth.common.tile.TileAltarRebirth
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.core.BlockPos
@@ -45,6 +46,7 @@ class Main {
         CREATIVE_MODE_TABS.register(modEventBus)
         modEventBus.addListener(::onClientSetup)
         MinecraftForge.EVENT_BUS.register(this)
+        NetworkHandler.registerPacket()
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC)
     }
 
