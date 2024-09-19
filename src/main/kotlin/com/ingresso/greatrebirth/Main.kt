@@ -2,11 +2,15 @@ package com.ingresso.greatrebirth
 
 import com.ingresso.greatrebirth.client.screens.ScreenAltarRebirth
 import com.ingresso.greatrebirth.common.block.BlockAltarRebirth
+import com.ingresso.greatrebirth.common.capability.BuffsProvider
 import com.ingresso.greatrebirth.common.container.ContainerAltarRebirth
 import com.ingresso.greatrebirth.common.tile.TileAltarRebirth
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters
@@ -18,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.extensions.IForgeMenuType
+import net.minecraftforge.event.AttachCapabilitiesEvent
 import net.minecraftforge.event.server.ServerStartingEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.ModLoadingContext
@@ -54,6 +59,15 @@ class Main {
 
     @SubscribeEvent
     fun onServerStarting(event: ServerStartingEvent?) {}
+
+    @SubscribeEvent
+    fun onAttachCapability(event: AttachCapabilitiesEvent<Entity>) {
+        if (event.`object` is Player) {
+            if (!event.`object`.getCapability(BuffsProvider.BUFF_CAP, null).isPresent) {
+                event.addCapability(ResourceLocation(Main.MODID, "buffs"), BuffsProvider())
+            }
+        }
+    }
 
     companion object {
         const val MODID = "greatrebirth"

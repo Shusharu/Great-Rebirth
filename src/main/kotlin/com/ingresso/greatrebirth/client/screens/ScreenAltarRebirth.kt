@@ -1,8 +1,10 @@
 package com.ingresso.greatrebirth.client.screens
 
 import com.ingresso.greatrebirth.Main
+import com.ingresso.greatrebirth.client.ability.BuffsList
 import com.ingresso.greatrebirth.common.container.ContainerAltarRebirth
 import com.ingresso.greatrebirth.common.tile.TileAltarRebirth
+import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -16,6 +18,8 @@ class ScreenAltarRebirth(container: ContainerAltarRebirth, player: Inventory, ti
     private val background = ResourceLocation(Main.MODID, "textures/gui/rebirthaltar.png")
     private val tile: TileAltarRebirth
     private var isButtonDown = false
+    private var tripleSet:
+            Triple<Pair<Int, Component>, Pair<Int, Component>, Pair<Int, Component>>? = null
 
     init {
         imageWidth = 176
@@ -28,15 +32,25 @@ class ScreenAltarRebirth(container: ContainerAltarRebirth, player: Inventory, ti
         super.render(guiGraphics, mouseX, mouseY, partialTick)
         clearWidgets()
         val rebirthButton = Button.builder(Component.translatable("button.rebirth")) {
-            isButtonDown = true
+            if (tile.currentBlood >= 30000) {
+                tripleSet = BuffsList.createChoose()
+                if (tripleSet != null) {
+                    isButtonDown = true
+                }
+            }
         }
             .pos(leftPos + 86, topPos + 91)
             .size(80, 20)
             .build()
         addRenderableWidget(rebirthButton)
+
         if (isButtonDown) {
-            addChooseButtons {
+            addChooseButtons { num, text ->
                 isButtonDown = false
+                Minecraft.getInstance().setScreen(null)
+                BuffsList.clearNumbers()
+                BuffsList.positiveAbilities.removeAt(num)
+                // TODO: send packet to ServerPlayer with capability
             }
         }
     }
@@ -57,16 +71,22 @@ class ScreenAltarRebirth(container: ContainerAltarRebirth, player: Inventory, ti
         pGuiGraphics.blit(background, leftPos + 99, topPos + 56, 0, imageHeight, 71, 20)
     }
 
-    private fun addChooseButtons(action: () -> Unit) {
-        val firstChoose = Button.builder(Component.translatable(""), { action.invoke() })
+    private fun addChooseButtons(onPress: (Int, String) -> Unit) {
+        val firstChoose = Button.builder(tripleSet!!.first.second) {
+            onPress.invoke(tripleSet!!.first.first, tripleSet!!.first.second.toString())
+        }
             .pos(leftPos + 99, topPos + 10)
             .size(71, 20)
             .build()
-        val secondChoose = Button.builder(Component.translatable(""), { action.invoke() })
+        val secondChoose = Button.builder(tripleSet!!.second.second) {
+            onPress.invoke(tripleSet!!.second.first, tripleSet!!.second.second.toString())
+        }
             .pos(leftPos + 99, topPos + 33)
             .size(71, 20)
             .build()
-        val thirdChoose = Button.builder(Component.translatable(""), { action.invoke() })
+        val thirdChoose = Button.builder(tripleSet!!.third.second) {
+            onPress.invoke(tripleSet!!.third.first, tripleSet!!.third.second.toString())
+        }
             .pos(leftPos + 99, topPos + 56)
             .size(71, 20)
             .build()
