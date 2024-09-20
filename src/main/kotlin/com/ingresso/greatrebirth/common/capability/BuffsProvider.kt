@@ -11,28 +11,18 @@ import net.minecraftforge.common.util.LazyOptional
 
 
 class BuffsProvider: ICapabilitySerializable<CompoundTag> {
-    var buffsCap: BuffsCap? = null
+    private val buffsCap: BuffsCap = BuffsCap()
 
     override fun <T : Any?> getCapability(cap: Capability<T>, side: Direction?): LazyOptional<T> {
-        if (cap == BUFF_CAP) {
-            return LazyOptional.of(::initBuffsCap).cast()
-        }
-        return LazyOptional.empty()
+        return BUFF_CAP.orEmpty(cap, LazyOptional.of(::buffsCap))
     }
 
     override fun serializeNBT(): CompoundTag {
-        return buffsCap?.saveData() ?: CompoundTag()
+        return buffsCap.saveData()
     }
 
     override fun deserializeNBT(tag: CompoundTag) {
-        buffsCap?.loadData(tag)
-    }
-
-    private fun initBuffsCap(): BuffsCap {
-        if (buffsCap == null) {
-            buffsCap = BuffsCap()
-        }
-        return buffsCap!!
+        buffsCap.loadData(tag)
     }
 
     companion object {

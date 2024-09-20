@@ -12,7 +12,9 @@ class BuffsCap {
         val generalTag = CompoundTag()
         generalTag.putBoolean("isPositiveBuffs", isPositiveBuffs)
         val listTag = CompoundTag()
-        actualBuffs.forEach({ listTag::putString })
+        actualBuffs.forEach() {
+            listTag.putString(it, it)
+        }
         generalTag.put("actualBuffs", listTag)
         return generalTag
     }
