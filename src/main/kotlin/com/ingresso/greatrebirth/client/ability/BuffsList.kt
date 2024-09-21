@@ -4,15 +4,13 @@ import net.minecraft.network.chat.Component
 import kotlin.random.Random
 
 object BuffsList {
-    val positiveAbilities: MutableList<Buff> = mutableListOf(
-        Buff("0"),
-        Buff("1"),
-        Buff("2"),
-        Buff("3"),
-        Buff("4"),
-        Buff("5"),
-        Buff("6"),
+    val positiveAbilities: List<Buff> = listOf(
+        Buff("0"), Buff("1"), Buff("2"), Buff("3"),
+        Buff("4"), Buff("5"), Buff("6"), Buff("7"),
+        Buff("8"), Buff("9"), Buff("10"), Buff("11"),
+        Buff("12"), Buff("13"), Buff("14"),
     )
+    var remainingAbilities: MutableList<Buff> = mutableListOf()
     private val numbers = mutableListOf<Int>()
 
     fun createChoose(): Triple<Pair<Int, Component>, Pair<Int, Component>, Pair<Int, Component>>? {
@@ -29,19 +27,19 @@ object BuffsList {
     fun clearNumbers() = numbers.clear()
 
     private fun generateAbility(index: Int): Pair<Int, Component> {
-        val component = positiveAbilities[index].getComponent()
+        val component = remainingAbilities[index].getComponent()
         return Pair(index, component)
     }
 
     private fun generateNumbers(): Boolean {
-        if (positiveAbilities.isEmpty()) {
+        if (remainingAbilities.isEmpty()) {
             return false
         }
         val random = Random.Default
         var num: Int
         while (numbers.size < 3) {
-            num = random.nextInt(0, positiveAbilities.size)
-            if (positiveAbilities.size >= 3) {
+            num = random.nextInt(0, remainingAbilities.size)
+            if (remainingAbilities.size >= 3) {
                 if (!numbers.contains(num)) {
                     numbers.add(num)
                 }

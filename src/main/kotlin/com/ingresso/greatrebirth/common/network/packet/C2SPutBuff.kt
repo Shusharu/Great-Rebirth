@@ -19,7 +19,9 @@ class C2SPutBuff(private val buff: String) {
             ctx.get().enqueueWork {
                 val player = ctx.get().sender
                 player?.getCapability(BuffsProvider.BUFF_CAP)?.ifPresent {
-                    it.actualBuffs.add(msg.buff)
+                    if (it.isPositiveBuffs) {
+                        it.actualBuffs.add(msg.buff)
+                    }
                 }
             }
             ctx.get().packetHandled = true

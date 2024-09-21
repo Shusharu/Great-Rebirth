@@ -2,7 +2,6 @@ package com.ingresso.greatrebirth.client.screens
 
 import com.ingresso.greatrebirth.Main
 import com.ingresso.greatrebirth.client.ability.BuffsList
-import com.ingresso.greatrebirth.common.capability.BuffsProvider
 import com.ingresso.greatrebirth.common.container.ContainerAltarRebirth
 import com.ingresso.greatrebirth.common.network.NetworkHandler
 import com.ingresso.greatrebirth.common.network.packet.C2SPutBuff
@@ -52,7 +51,7 @@ class ScreenAltarRebirth(container: ContainerAltarRebirth, player: Inventory, ti
                 isButtonDown = false
                 Minecraft.getInstance().setScreen(null)
                 BuffsList.clearNumbers()
-                BuffsList.positiveAbilities.removeAt(num)
+                BuffsList.remainingAbilities.removeAt(num)
                 NetworkHandler.INSTANCE.sendToServer(C2SPutBuff(text))
             }
         }
