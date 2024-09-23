@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "greatrebirth.refmap.json",
   "mixins": [
+    "MixinLivingEntity",
+    "MixinPlayer"
   ],
   "client": [
   ],

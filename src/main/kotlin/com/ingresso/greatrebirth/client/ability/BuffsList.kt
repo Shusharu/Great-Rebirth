@@ -5,7 +5,7 @@ import kotlin.random.Random
 
 object BuffsList {
     val positiveAbilities: List<Buff> = listOf(
-        Buff("0"), Buff("1"), Buff("2"), Buff("3"),
+        Buff("buff.damage"), Buff("buff.totem"), Buff("2"), Buff("3"),
         Buff("4"), Buff("5"), Buff("6"), Buff("7"),
         Buff("8"), Buff("9"), Buff("10"), Buff("11"),
         Buff("12"), Buff("13"), Buff("14"),

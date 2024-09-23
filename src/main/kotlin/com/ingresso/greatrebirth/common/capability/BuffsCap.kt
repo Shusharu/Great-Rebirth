@@ -24,7 +24,9 @@ class BuffsCap {
         val listTag = tag.getCompound("actualBuffs")
         listTag.allKeys.forEach {
             if (it.contains("translation")) {
-                it.replace("translation{key='", "").replace("', args=[]}", "")
+                val sliced = it.replace("translation{key='", "").replace("', args=[]}", "")
+                actualBuffs.add(sliced)
+                return
             }
             actualBuffs.add(it)
         }
