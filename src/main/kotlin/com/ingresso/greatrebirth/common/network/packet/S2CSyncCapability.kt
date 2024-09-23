@@ -23,7 +23,9 @@ class S2CSyncCapability(private val nbt: CompoundTag) {
                 Minecraft.getInstance().player!!.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
                     it.loadData(msg.nbt)
                     BuffsList.remainingAbilities.clear()
-
+                    BuffsList.positiveAbilities.stream()
+                        .filter { buff -> !it.actualBuffs.contains(buff.text) }
+                        .forEach { buff -> BuffsList.remainingAbilities.add(buff) }
                 }
             }
             ctx.get().packetHandled = true

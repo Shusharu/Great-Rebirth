@@ -13,7 +13,7 @@ class BuffsCap {
         generalTag.putBoolean("isPositiveBuffs", isPositiveBuffs)
         val listTag = CompoundTag()
         actualBuffs.forEach() {
-            listTag.putString(it, it)
+            listTag.putString(it, "")
         }
         generalTag.put("actualBuffs", listTag)
         return generalTag
@@ -22,7 +22,10 @@ class BuffsCap {
     fun loadData(tag: CompoundTag) {
         isPositiveBuffs = tag.getBoolean("isPositiveBuffs")
         val listTag = tag.getCompound("actualBuffs")
-        listTag.allKeys.forEach() {
+        listTag.allKeys.forEach {
+            if (it.contains("translation")) {
+                it.replace("translation{key='", "").replace("', args=[]}", "")
+            }
             actualBuffs.add(it)
         }
     }
