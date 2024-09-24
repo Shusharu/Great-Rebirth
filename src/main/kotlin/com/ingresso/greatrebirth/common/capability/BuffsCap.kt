@@ -26,9 +26,9 @@ class BuffsCap {
             if (it.contains("translation")) {
                 val sliced = it.replace("translation{key='", "").replace("', args=[]}", "")
                 actualBuffs.add(sliced)
-                return
+            } else {
+                actualBuffs.add(it)
             }
-            actualBuffs.add(it)
         }
     }
 }

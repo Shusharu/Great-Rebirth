@@ -6,7 +6,9 @@
   "refmap": "greatrebirth.refmap.json",
   "mixins": [
     "MixinLivingEntity",
-    "MixinPlayer"
+    "MixinPiglinAi",
+    "MixinPlayer",
+    "MixinVillager"
   ],
   "client": [
   ],

@@ -6,6 +6,8 @@ import com.ingresso.greatrebirth.common.network.NetworkHandler
 import com.ingresso.greatrebirth.common.network.packet.S2CSyncCapability
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraftforge.event.entity.living.EnderManAngerEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 
@@ -42,6 +44,17 @@ class CommonHandlerEvents {
         val player = event.entity as ServerPlayer
         player.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
             NetworkHandler.sendToPlayer({ player }, S2CSyncCapability(it.saveData()))
+        }
+    }
+
+    @SubscribeEvent
+    fun onEndermanAnger(event: EnderManAngerEvent) {
+        lateinit var actualBuffs: List<String>
+        event.player.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
+            actualBuffs = it.actualBuffs
+        }
+        if (actualBuffs.contains("buff.enderman.anger")) {
+            event.isCanceled = true
         }
     }
 }
