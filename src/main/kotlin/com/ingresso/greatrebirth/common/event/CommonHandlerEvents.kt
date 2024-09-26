@@ -14,7 +14,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 class CommonHandlerEvents {
     @SubscribeEvent
     fun onPlayerClone(event: PlayerEvent.Clone) {
-        if (!event.isWasDeath) return
         lateinit var nbt: CompoundTag
         val oldPlayer = event.original
         val newPlayer = event.entity
@@ -36,7 +35,7 @@ class CommonHandlerEvents {
                 it.isPositiveBuffs = false
             }
         }
-        newPlayer.invalidateCaps()
+        oldPlayer.invalidateCaps()
     }
 
     @SubscribeEvent
@@ -49,12 +48,14 @@ class CommonHandlerEvents {
 
     @SubscribeEvent
     fun onEndermanAnger(event: EnderManAngerEvent) {
-        lateinit var actualBuffs: List<String>
+        var actualBuffs: List<String>? = null
         event.player.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
             actualBuffs = it.actualBuffs
         }
-        if (actualBuffs.contains("buff.enderman.anger")) {
-            event.isCanceled = true
+        if (actualBuffs != null) {
+            if (actualBuffs!!.contains("buff.enderman.anger")) {
+                event.isCanceled = true
+            }
         }
     }
 }
