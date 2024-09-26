@@ -14,28 +14,23 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 class CommonHandlerEvents {
     @SubscribeEvent
     fun onPlayerClone(event: PlayerEvent.Clone) {
-        lateinit var nbt: CompoundTag
-        val oldPlayer = event.original
-        val newPlayer = event.entity
-
-        oldPlayer.reviveCaps()
-        oldPlayer.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
-            nbt = it.saveData()
-        }
-        newPlayer.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
-            it.loadData(nbt)
-            if (it.actualBuffs.isNotEmpty()) {
-                if (it.isPositiveBuffs) {
-                    it.actualBuffs.removeLast()
-                } else if (!it.isPositiveBuffs && it.actualBuffs.size < 15) {
-                    // TODO: add new de-buff
+        event.original.reviveCaps()
+        event.original.getCapability(BuffsProvider.BUFF_CAP).ifPresent { oldCap ->
+            event.entity.getCapability(BuffsProvider.BUFF_CAP).ifPresent { newCap ->
+                newCap.copyFrom(oldCap)
+                if (newCap.actualBuffs.isNotEmpty()) {
+                    if (newCap.isPositiveBuffs) {
+                        newCap.actualBuffs.removeLast()
+                    } else if (!newCap.isPositiveBuffs && newCap.actualBuffs.size < 15) {
+                        // TODO: add new de-buff
+                    }
+                } else {
+                    // TODO: add first de-buff
+                    newCap.isPositiveBuffs = false
                 }
-            } else {
-                // TODO: add first de-buff
-                it.isPositiveBuffs = false
             }
         }
-        oldPlayer.invalidateCaps()
+        event.original.invalidateCaps()
     }
 
     @SubscribeEvent
@@ -48,12 +43,8 @@ class CommonHandlerEvents {
 
     @SubscribeEvent
     fun onEndermanAnger(event: EnderManAngerEvent) {
-        var actualBuffs: List<String>? = null
         event.player.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
-            actualBuffs = it.actualBuffs
-        }
-        if (actualBuffs != null) {
-            if (actualBuffs!!.contains("buff.enderman.anger")) {
+            if (it.actualBuffs.contains("buff.enderman.anger")) {
                 event.isCanceled = true
             }
         }

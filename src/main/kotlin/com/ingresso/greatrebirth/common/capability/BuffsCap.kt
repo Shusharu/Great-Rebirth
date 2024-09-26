@@ -31,4 +31,9 @@ class BuffsCap {
             }
         }
     }
+
+    fun copyFrom(oldCap: BuffsCap) {
+        isPositiveBuffs = oldCap.isPositiveBuffs
+        actualBuffs.addAll(oldCap.actualBuffs)
+    }
 }
