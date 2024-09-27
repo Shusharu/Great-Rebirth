@@ -10,6 +10,7 @@ import net.minecraft.world.effect.MobEffectInstance
 import net.minecraftforge.event.entity.living.EnderManAngerEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
+import wayoftime.bloodmagic.event.SacrificeKnifeUsedEvent
 
 class CommonHandlerEvents {
     @SubscribeEvent
@@ -46,6 +47,15 @@ class CommonHandlerEvents {
         event.player.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
             if (it.actualBuffs.contains("buff.enderman.anger")) {
                 event.isCanceled = true
+            }
+        }
+    }
+
+    @SubscribeEvent
+    fun onSacrificePlayer(event: SacrificeKnifeUsedEvent) {
+        event.player.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
+            if (it.actualBuffs.contains("buff.sacrifice.lp")) {
+                event.lpAdded += 200
             }
         }
     }
