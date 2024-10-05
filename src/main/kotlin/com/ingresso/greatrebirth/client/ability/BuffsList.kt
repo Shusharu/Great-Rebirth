@@ -7,7 +7,7 @@ object BuffsList {
     val positiveAbilities: List<Buff> = listOf(
         Buff("buff.damage"), Buff("buff.totem"), Buff("buff.piglin.wearing"),
         Buff("buff.enderman.anger"), Buff("buff.villager.discount"), Buff("buff.sacrifice.lp"),
-        Buff("6"), Buff("7"), Buff("8"),
+        Buff("buff.xp"), Buff("7"), Buff("8"),
         Buff("9"), Buff("10"), Buff("11"),
         Buff("12"), Buff("13"), Buff("14"),
     )

@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraftforge.event.entity.living.EnderManAngerEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
+import net.minecraftforge.event.entity.player.PlayerXpEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import wayoftime.bloodmagic.event.SacrificeKnifeUsedEvent
 
@@ -56,6 +57,15 @@ class CommonHandlerEvents {
         event.player.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
             if (it.actualBuffs.contains("buff.sacrifice.lp")) {
                 event.lpAdded += 200
+            }
+        }
+    }
+
+    @SubscribeEvent
+    fun onXpIncrement(event: PlayerXpEvent.XpChange) {
+        event.entity.getCapability(BuffsProvider.BUFF_CAP).ifPresent {
+            if (it.actualBuffs.contains("buff.xp")) {
+                event.amount *= 3
             }
         }
     }
